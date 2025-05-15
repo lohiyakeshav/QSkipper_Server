@@ -2,11 +2,13 @@
   "name": "vscode",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "author": "priyanshu gupta",
+  "author": "Keshav Lohiya",
   "license": "ISC",
   "description": "",
   "dependencies": {
