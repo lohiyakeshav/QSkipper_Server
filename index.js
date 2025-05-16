@@ -41,23 +41,21 @@ setInterval(async () => {
     // Dynamically import node-fetch
     const { default: fetch } = await import('node-fetch');
     
-    // Construct the URL - try different approaches in case environment variables aren't set
+    // Determine the URL to ping
     let pingUrl;
     
-    // First try to use the environment variable
-    if (process.env.RENDER_EXTERNAL_URL) {
-      pingUrl = process.env.RENDER_EXTERNAL_URL;
-    } 
-    // Fall back to ROOT_URL if set
-    else if (process.env.ROOT_URL) {
+    // Use ROOT_URL from environment (prioritize this for Render deployment)
+    if (process.env.ROOT_URL) {
       pingUrl = process.env.ROOT_URL;
-      if (!pingUrl.startsWith('http')) {
-        pingUrl = `https://${pingUrl}`;
-      }
-    }
-    // If we're running locally or don't have a domain set up, use our own server
+    } 
+    // Fallback to localhost if running locally
     else {
       pingUrl = `http://localhost:${PORT}`;
+    }
+    
+    // Ensure the URL has a protocol
+    if (!pingUrl.startsWith('http')) {
+      pingUrl = `https://${pingUrl}`;
     }
     
     console.log(`Pinging: ${pingUrl}`);
