@@ -3,69 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your OTP Code</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+    <title>Verify Your Email - QSkipper</title>
+    <style type="text/css">
+        /* Base styles */
+        body, html {
             margin: 0;
             padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        .email-container {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .email-header {
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 24px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        .email-body {
-            padding: 20px;
-            text-align: center;
-            color: #333;
-        }
-        .otp-code {
-            font-size: 28px;
-            font-weight: bold;
-            color: #4CAF50;
-            margin: 20px 0;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #666;
-            text-align: center;
-        }
-        .footer a {
-            color: #4CAF50;
-            text-decoration: none;
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #000000 !important;
+            }
+            .email-container {
+                background-color: #000000 !important;
+            }
+            .email-content {
+                background-color: #1c1c1e !important;
+                box-shadow: none !important;
+            }
+            .brand-name {
+                color: #ffffff !important;
+            }
+            .brand-name span {
+                color: #20D17A !important;
+            }
+            h1 {
+                color: #ffffff !important;
+            }
+            p {
+                color: #ebebf0 !important;
+            }
+            .text-muted {
+                color: #98989d !important;
+            }
+            .otp-code {
+                background-color: #2c2c2e !important;
+                border: 1px solid #3a3a3c !important;
+            }
+            .otp-text {
+                color: #ffffff !important;
+            }
+            .divider {
+                background-color: #38383a !important;
+            }
+            .footer {
+                background-color: #1c1c1e !important;
+                border-top: 1px solid #38383a !important;
+            }
+            .footer-text {
+                color: #98989d !important;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="email-container">
-        <div class="email-header">
-            Restaurant App OTP Verification
-        </div>
-        <div class="email-body">
-            <p>Dear User,</p>
-            <p>Your OTP for verifying your email is:</p>
-            <div class="otp-code">123456</div>
-            <p>Please enter this code to complete your verification process.</p>
-            <p>If you didn't request this code, please ignore this email.</p>
-        </div>
-        <div class="footer">
-            <p>Thank you for using our service!<br> Need help? <a href="mailto:support@restaurantapp.com">Contact Support</a></p>
-        </div>
-    </div>
+<body style="margin: 0; padding: 0; background-color: #f5f5f7; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+    <!-- Email Container -->
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container" style="max-width: 580px; margin: 0 auto; padding: 20px;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <!-- Email Content -->
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="email-content" style="background-color: #ffffff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    <!-- Brand Header -->
+                    <tr>
+                        <td align="center" style="padding: 40px 24px 24px 24px;">
+                            <h1 class="brand-name" style="margin: 0; font-size: 36px; line-height: 1.1; font-weight: 700; color: #1d1d1f; text-align: center; letter-spacing: -0.03em;">
+                                <span style="color: #20D17A;">Q</span>Skipper
+                            </h1>
+                        </td>
+                    </tr>
+                    
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 0 32px 32px 32px;">
+                            <h2 style="margin: 0 0 16px 0; font-size: 24px; line-height: 1.2; font-weight: 600; color: #1d1d1f; text-align: center; letter-spacing: -0.01em;">Verify your email</h2>
+                            
+                            <p style="margin: 0 0 32px 0; font-size: 17px; line-height: 1.47; color: #424245; text-align: center; letter-spacing: -0.022em;">
+                                To complete your QSkipper account setup, please enter the verification code below in the app.
+                            </p>
+                            
+                            <!-- OTP Code -->
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 32px;">
+                                <tr>
+                                    <td align="center">
+                                        <div class="otp-code" style="background-color: #f5f5f7; border-radius: 12px; padding: 16px 24px; display: inline-block; min-width: 180px; text-align: center; border: 1px solid #e5e5e7;">
+                                            <span class="otp-text" style="font-size: 36px; font-weight: 600; letter-spacing: 6px; color: #1d1d1f; font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', 'SF Pro Display', monospace;">123456</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Divider -->
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 32px;">
+                                <tr>
+                                    <td>
+                                        <div class="divider" style="height: 1px; background-color: #e5e5e7; width: 100%;"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Additional Info -->
+                            <p class="text-muted" style="margin: 0; font-size: 14px; line-height: 1.4; color: #86868b; text-align: center; letter-spacing: -0.016em;">
+                                If you didn't request this code, you can safely ignore this email.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer" style="padding: 24px 32px; background-color: #f5f5f7; border-top: 1px solid #e5e5e7;">
+                            <p class="footer-text" style="margin: 0; font-size: 12px; line-height: 1.33; color: #86868b; text-align: center; letter-spacing: -0.01em;">
+                                &copy; 2025 QSkipper. All rights reserved.<br>
+                                Crafted with ❤️ by <a href="https://keshavlohiya.vercel.app" style="color: #0071e3; text-decoration: none;">QSkipper</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

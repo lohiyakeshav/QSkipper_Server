@@ -1,10 +1,9 @@
 // const express = require('express');
 const nodemailer = require('nodemailer');
 const dotenv = require("dotenv");
+const fs = require('fs');
+const path = require('path');
 dotenv.config()
-
-// const fs = require('fs');
-// const path = require('path');
 
 // const app = express();
 // app.use(express.json());
@@ -21,23 +20,36 @@ const transporter = nodemailer.createTransport({
 });
 async function sendOTPEmail(email, otp) {
     try {
+      // Read the email template file
+      const templatePath = path.join(__dirname, '../public/emailTemplate.html');
+      console.log(`Reading email template from: ${templatePath}`);
+      
+      let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+      console.log(`Template loaded successfully, size: ${emailTemplate.length} bytes`);
+      
+      // Replace the placeholder OTP with the actual OTP
+      emailTemplate = emailTemplate.replace('123456', otp);
+      console.log(`OTP replaced in template: ${otp}`);
+      
       const mailOptions = {
         from: 'priyanshugupta.112002@gmail.com',
         to: email,
-        subject: 'Your OTP for Registration',
-        text: `Your OTP is: ${otp}`,
+        subject: 'Verify Your Email - QSkipper',
+        html: emailTemplate,
+        text: `Your OTP for verification is: ${otp}`, // Plain text fallback
       };
   
       const info = await transporter.sendMail(mailOptions);
-      console.log(`Email sent: ${info.response}`);
+      console.log(`Email sent with HTML template: ${info.response}`);
       return { success: true };
     } catch (error) {
-      console.error(`Error sending OTP email: ${error}`);
+      console.error(`Error sending OTP email: ${error.message}`);
+      console.error(error.stack);
       return { success: false, error };
     }
   }
   
-  module.exports = { sendOTPEmail };
+module.exports = { sendOTPEmail };
 
 // app.post('/send-email', (req, res) => {
 //     console.log("Sending");

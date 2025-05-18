@@ -1,0 +1,26 @@
+hi QSkipper app is here 3000
+connected
+test2@example.com
+Generated OTP: 627375
+Reading email template from: /Users/lohiyakeshav/Desktop/QSkipper Backend/public/emailTemplate.html
+Template loaded successfully, size: 6581 bytes
+OTP replaced in template: 627375
+Email sent with HTML template: 250 2.0.0 OK  1747564955 d2e1a72fcca58-742a9860d46sm4321931b3a.127 - gsmtp
+OTP Email Result: { success: true }
+[0mPOST /login [32m200[0m 3928.287 ms - 131[0m
+keshav.lohiyas@gmail.com
+Generated OTP: 748585
+Reading email template from: /Users/lohiyakeshav/Desktop/QSkipper Backend/public/emailTemplate.html
+Template loaded successfully, size: 6581 bytes
+OTP replaced in template: 748585
+Email sent with HTML template: 250 2.0.0 OK  1747565016 d9443c01a7336-231d4adbee1sm41842315ad.70 - gsmtp
+OTP Email Result: { success: true }
+[0mPOST /login [32m200[0m 3956.725 ms - 134[0m
+keshav.lohiyas@gmail.com
+Generated OTP: 811582
+Reading email template from: /Users/lohiyakeshav/Desktop/QSkipper Backend/public/emailTemplate.html
+Template loaded successfully, size: 6577 bytes
+OTP replaced in template: 811582
+Email sent with HTML template: 250 2.0.0 OK  1747565090 d9443c01a7336-231d4ed897asm41872755ad.250 - gsmtp
+OTP Email Result: { success: true }
+[0mPOST /login [32m200[0m 4056.840 ms - 134[0m
