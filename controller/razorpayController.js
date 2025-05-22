@@ -149,7 +149,7 @@ exports.scheduleOrderPlaced = async(req,res)=>{
              userID:userId,
              cookTime:resturantExist.estimatedTime,
              scheduleDate,
-             takeAway:false,
+             takeAway,
              status:"Schedule"
  
          })
