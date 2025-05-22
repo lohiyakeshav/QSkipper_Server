@@ -127,7 +127,7 @@ exports.scheduleOrderPlaced = async(req,res)=>{
    
          const {items , price , restaurantId , userId , scheduleDate , takeAway} = req.body
 
-         if (!items || !price || !restaurantId || !userId || !takeAway || !scheduleDate){
+         if (!items || !price || !restaurantId || !userId  || !scheduleDate){
             return res.status(400).send({
             success:false,
             message:"incomplete Credentials"
@@ -149,7 +149,7 @@ exports.scheduleOrderPlaced = async(req,res)=>{
              userID:userId,
              cookTime:resturantExist.estimatedTime,
              scheduleDate,
-             takeAway,
+             takeAway: takeAway? true : false,
              status:"Schedule"
  
          })
