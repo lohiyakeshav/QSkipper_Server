@@ -24,3 +24,21 @@ OTP replaced in template: 811582
 Email sent with HTML template: 250 2.0.0 OK  1747565090 d9443c01a7336-231d4ed897asm41872755ad.250 - gsmtp
 OTP Email Result: { success: true }
 [0mPOST /login [32m200[0m 4056.840 ms - 134[0m
+Pinging: https://qskipper-server.onrender.com
+Self-ping success: 200
+nwahi1411@gmail.com
+Generated OTP: 615009
+Reading email template from: /Users/lohiyakeshav/Desktop/QSkipper Backend/public/emailTemplate.html
+Template loaded successfully, size: 6577 bytes
+OTP replaced in template: 615009
+Email sent with HTML template: 250 2.0.0 OK  1747565987 41be03b00d2f7-b26f55ee652sm3375023a12.53 - gsmtp
+OTP Email Result: { success: true }
+[0mPOST /login [32m200[0m 4646.517 ms - 127[0m
+nwahi1411@gmail.com
+Generated OTP: 963745
+Reading email template from: /Users/lohiyakeshav/Desktop/QSkipper Backend/public/emailTemplate.html
+Template loaded successfully, size: 6577 bytes
+OTP replaced in template: 963745
+Email sent with HTML template: 250 2.0.0 OK  1747565999 41be03b00d2f7-b26eb0a4af6sm4374274a12.77 - gsmtp
+OTP Email Result: { success: true }
+[0mPOST /login [32m200[0m 3624.618 ms - 127[0m

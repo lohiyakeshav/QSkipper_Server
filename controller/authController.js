@@ -318,7 +318,8 @@ exports.ResturantloginController = async (req, res) => {
         const { email, password } = req.body;
 
         // Check if email and password are provided
-
+       console.log(password ,email)
+       
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -334,19 +335,25 @@ exports.ResturantloginController = async (req, res) => {
             });
         }
         
-        // const samePassword = await comparePassword(password, userExist.password);
-        // console.log(samePassword)
-        // if (!samePassword) {
-        //     return res.status(401).json({
-        //         success: false,
-        //         message: "Invalid Credentials",
-        //     });
-        // }
+        const samePassword = await comparePassword(password, userExist.password);
+        console.log(samePassword)
+        if (!samePassword) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid Credentials",
+            });
+        }
         // console.log("saas")
+        console.log(userExist)
         const resturantExist = await ResturantSchema.findOne({ user: userExist._id });
+
+        const bannerphoto = resturantExist?.bannerPhoto64Image.data
+        if(resturantExist?.bannerPhoto64Image.data){
+          bannerphoto.set("Content-type", resturantExist.bannerPhoto64Image.contentType);
+        }
         console.log(resturantExist)
         return res.status(200).json({
-            id: resturantExist._id,
+            id:userExist._id,
             restaurantid: resturantExist ? resturantExist._id : "",
             restaurantName: resturantExist ? resturantExist.restaurant_Name : "",
             resturantEstimateTime: resturantExist ? resturantExist.estimatedTime : 0,
@@ -365,7 +372,7 @@ exports.ResturantloginController = async (req, res) => {
 
 exports.resturantRegisterController = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password  } = req.body;
     console.log(email, password);
 
     // Validate input
@@ -387,15 +394,17 @@ exports.resturantRegisterController = async (req, res) => {
       });
     }
 
+    const hashPassword = await hashedPassword(password)
+    
     // Save user details in the verification schema
     const user = new UserSchema({
       email,
-      password,
+      password:hashPassword,
     });
 
     await user.save();
 
-    return res.status(200).json({
+    return res.status(202).json({
       id:user._id
     });
 

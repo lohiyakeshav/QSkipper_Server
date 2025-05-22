@@ -12,7 +12,11 @@ const userSchema = new mongoose.Schema({
     otp:{
         type:String,
         require:true
+    },
+    password:{
+        type:String
     }
+
     // securityCode:{
     //     type:String,
     //     require:true,
@@ -47,4 +51,3 @@ const userSchema = new mongoose.Schema({
 
 const UserSchema =  mongoose.model('users' , userSchema)
 module.exports = UserSchema
-
