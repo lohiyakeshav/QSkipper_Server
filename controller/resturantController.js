@@ -62,6 +62,60 @@ const registerResturantComtroller = async(req,res)=>{
 
     
 }
+
+
+const UpdateResturantController = async (req, res) => {
+    try {
+        console.log("hello")
+        const { userId, restaurant_Name, cuisines, estimatedTime } = req.fields;
+        const { bannerPhoto64Image } = req.files;
+
+        console.log(req.fields)
+
+        console.log(req.files)
+
+
+        if (!userId || !restaurant_Name || !cuisines || !estimatedTime) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+        if (!bannerPhoto64Image) {
+            return res.status(400).json({ error: "Missing banner image" });
+        }
+
+        const existingRestaurant = await ResturantSchema.findOne({ user: userId });
+
+        if (!existingRestaurant) {
+            return res.status(404).json({ error: "Restaurant not found" });
+        }
+
+        // Update fields
+        existingRestaurant.restaurant_Name = restaurant_Name;
+        existingRestaurant.cuisine = cuisines;
+        existingRestaurant.estimatedTime = estimatedTime;
+
+        // Update image
+        existingRestaurant.bannerPhoto64Image = {
+            data: fs.readFileSync(bannerPhoto64Image.path),
+            contentType: bannerPhoto64Image.type,
+        };
+
+        await existingRestaurant.save();
+
+        return res.status(200).json({ message: "Restaurant updated", id: existingRestaurant._id.toString() });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
+
+
+
+
+
+
 const get_All_resturant = async(req,res)=>{
 
     try {
@@ -157,4 +211,4 @@ const orderCompleted = async (req, res) => {
 
 
 
-module.exports = {registerResturantComtroller , get_All_resturant , get_Retrurant_Photo , resturantOrders , orderCompleted}
+module.exports = {registerResturantComtroller , get_All_resturant , get_Retrurant_Photo , resturantOrders , orderCompleted , UpdateResturantController}
