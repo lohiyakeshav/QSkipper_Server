@@ -2,7 +2,7 @@ const {ResturantSchema} = require("../model/shopOwners")
 const fs = require("fs")
 const formidable = require('formidable');
 const UserSchema = require("../model/user");
-const ProductSchema = require("../model/product");
+const {ProductSchema} = require("../model/product");
 const { OrderSchema } = require("../model/order");
 
 
@@ -215,33 +215,47 @@ const deleteRestaurantController = async (req, res) => {
             return res.status(400).json({ error: "Restaurant ID is required" });
         }
 
+        console.log("Attempting to delete restaurant with ID:", id);
+
         // Check if restaurant exists
         const restaurant = await ResturantSchema.findById(id);
         if (!restaurant) {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Find and delete all products associated with this restaurant
-        await ProductSchema.deleteMany({ restaurant_id: id });
-        
-        // Find orders associated with this restaurant and handle them
-        // Option: Mark orders as cancelled instead of deleting them
-        // await OrderSchema.updateMany({ resturant: id }, { status: "Cancelled" });
-        // Option: Delete the orders (uncomment if preferred)
-        await OrderSchema.deleteMany({ resturant: id });
+        console.log("Restaurant found, deleting associated products and orders");
 
-        // Finally delete the restaurant
-        await ResturantSchema.findByIdAndDelete(id);
-        
-        return res.status(200).json({ 
-            success: true,
-            message: "Restaurant and all associated data successfully deleted" 
-        });
+        try {
+            // Find and delete all products associated with this restaurant
+            const productsResult = await ProductSchema.deleteMany({ restaurant_id: id });
+            console.log("Products deleted:", productsResult);
+            
+            // Find orders associated with this restaurant and delete them
+            const ordersResult = await OrderSchema.deleteMany({ resturant: id });
+            console.log("Orders deleted:", ordersResult);
+
+            // Finally delete the restaurant
+            const restaurantResult = await ResturantSchema.findByIdAndDelete(id);
+            console.log("Restaurant deleted:", restaurantResult);
+            
+            return res.status(200).json({ 
+                success: true,
+                message: "Restaurant and all associated data successfully deleted" 
+            });
+        } catch (innerError) {
+            console.error("Specific delete operation error:", innerError);
+            return res.status(500).json({ 
+                success: false,
+                error: "Error deleting associated data",
+                details: innerError.message
+            });
+        }
     } catch (error) {
         console.error("Error deleting restaurant:", error);
         return res.status(500).json({ 
             success: false,
-            error: "Internal Server Error" 
+            error: "Internal Server Error",
+            details: error.message
         });
     }
 };

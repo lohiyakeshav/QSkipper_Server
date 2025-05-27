@@ -239,5 +239,50 @@ const RatingOfAProduct = async (req, res) => {
     }
   };
   
+const deleteProductController = async (req, res) => {
+    try {
+        const { pid } = req.params;
+        
+        if (!pid) {
+            return res.status(400).json({ 
+                success: false,
+                error: "Product ID is required" 
+            });
+        }
 
-module.exports = {createProductController , get_All_Product , get_Product_Photo  , updatePhotoController , topPicks , updateOnOrder , userOrders , RatingOfAProduct }
+        // Check if product exists
+        const product = await ProductSchema.findById(pid);
+        if (!product) {
+            return res.status(404).json({ 
+                success: false,
+                error: "Product not found" 
+            });
+        }
+
+        // Remove product from orders (alternative: could keep product details in orders for historical records)
+        // This approach removes the product from any pending orders' items array
+        await OrderSchema.updateMany(
+            { "items.productId": pid, status: { $in: ["Placed", "Prepared"] } },
+            { $pull: { items: { productId: pid } } }
+        );
+
+        // Remove empty orders (orders with no items)
+        await OrderSchema.deleteMany({ items: { $size: 0 } });
+
+        // Delete the product
+        await ProductSchema.findByIdAndDelete(pid);
+        
+        return res.status(200).json({ 
+            success: true,
+            message: "Product successfully deleted" 
+        });
+    } catch (error) {
+        console.error("Error deleting product:", error);
+        return res.status(500).json({ 
+            success: false,
+            error: "Internal Server Error" 
+        });
+    }
+};
+
+module.exports = {createProductController , get_All_Product , get_Product_Photo  , updatePhotoController , topPicks , updateOnOrder , userOrders , RatingOfAProduct, deleteProductController }
