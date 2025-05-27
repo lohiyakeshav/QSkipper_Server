@@ -165,10 +165,25 @@ const updatePhotoController = async(req,res)=>{
         }
         await product.save();
         console.log(product)
-        return res.status(200)
+        return res.status(200).json({
+            success: true,
+            message: "Product updated successfully",
+            productId: product._id,
+            product: {
+                name: product.product_name,
+                price: product.product_price,
+                category: product.food_category,
+                description: product.description
+            }
+        });
     
    } catch (error) {
     console.log(error)
+    return res.status(500).json({
+        success: false,
+        message: "Failed to update product",
+        error: error.message
+    });
    }
 
 
