@@ -1,5 +1,5 @@
 const express = require("express")
-const { registerResturantComtroller , get_All_resturant, get_Retrurant_Photo, resturantOrders, orderCompleted, UpdateResturantController,  } = require("../controller/resturantController")
+const { registerResturantComtroller , get_All_resturant, get_Retrurant_Photo, resturantOrders, orderCompleted, UpdateResturantController, deleteRestaurantController  } = require("../controller/resturantController")
 const Router = express.Router()
 const formidableMiddleware = require("express-formidable");
 
@@ -18,5 +18,7 @@ Router.get("/get_Restaurant_photo/:pid" , get_Retrurant_Photo)
 Router.get("/get-order/:pid" , resturantOrders)
 
 Router.put("/order-complete/:oid" , orderCompleted)
+
+Router.delete("/delete-restaurant/:id", deleteRestaurantController)
 
 module.exports = Router

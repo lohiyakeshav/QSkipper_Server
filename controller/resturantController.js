@@ -1,4 +1,3 @@
-
 const {ResturantSchema} = require("../model/shopOwners")
 const fs = require("fs")
 const formidable = require('formidable');
@@ -208,7 +207,43 @@ const orderCompleted = async (req, res) => {
     }
 };
 
+const deleteRestaurantController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (!id) {
+            return res.status(400).json({ error: "Restaurant ID is required" });
+        }
 
+        // Check if restaurant exists
+        const restaurant = await ResturantSchema.findById(id);
+        if (!restaurant) {
+            return res.status(404).json({ error: "Restaurant not found" });
+        }
 
+        // Find and delete all products associated with this restaurant
+        await ProductSchema.deleteMany({ restaurant_id: id });
+        
+        // Find orders associated with this restaurant and handle them
+        // Option: Mark orders as cancelled instead of deleting them
+        // await OrderSchema.updateMany({ resturant: id }, { status: "Cancelled" });
+        // Option: Delete the orders (uncomment if preferred)
+        await OrderSchema.deleteMany({ resturant: id });
 
-module.exports = {registerResturantComtroller , get_All_resturant , get_Retrurant_Photo , resturantOrders , orderCompleted , UpdateResturantController}
+        // Finally delete the restaurant
+        await ResturantSchema.findByIdAndDelete(id);
+        
+        return res.status(200).json({ 
+            success: true,
+            message: "Restaurant and all associated data successfully deleted" 
+        });
+    } catch (error) {
+        console.error("Error deleting restaurant:", error);
+        return res.status(500).json({ 
+            success: false,
+            error: "Internal Server Error" 
+        });
+    }
+};
+
+module.exports = {registerResturantComtroller, get_All_resturant, get_Retrurant_Photo, resturantOrders, orderCompleted, UpdateResturantController, deleteRestaurantController}
