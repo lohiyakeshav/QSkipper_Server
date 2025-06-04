@@ -22,56 +22,72 @@ const client = jwksClient({
 exports.userRegisterController = async (req, res) => {
     try {
       const { email, username } = req.body;
-      console.log(email, username);
-  
+      console.log(email, username)
+      
       // Validate input
-      if (!email || !username) {
+      if (!email) {
         return res.status(400).json({
           success: false,
-          message: "Incomplete credentials",
-          email,
-          username,
+          message: "Email is required",
+        });
+      }
+      
+      if (!username) {
+        return res.status(400).json({
+          success: false,
+          message: "Username is required",
+        });
+      }
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid email format",
         });
       }
   
-      // Check if email already exists
-      const emailExist = await UserSchema.findOne({ email });
-      if (emailExist) {
-        return res.status(400).json({
+      // Check if email already exists in main users table
+      const emailExistInUsers = await UserSchema.findOne({ email });
+      if (emailExistInUsers) {
+        return res.status(409).json({
           success: false,
-          message: "Email already exists",
+          message: "Email already registered. Please login instead.",
         });
       }
   
       // Generate OTP
-      
       const otp = generateOTP();
-      console.log(otp);
-  
-      // Send OTP email (ensure sendOTPEmail returns a promise)
-
+      console.log(otp)
+      
+      // Check if user exists in verification table
+      const userExist = await verifyUsersSchema.findOne({email});
+      
+      // Send OTP email
       try {
-        const result = await sendOTPEmail(email, otp);
-        console.log(result);
+        await sendOTPEmail(email, otp);
       } catch (err) {
         console.error("Error sending OTP email:", err);
         return res.status(500).json({
           success: false,
-          message: "Failed to send OTP email. Please try again.",
+          message: "Failed to send verification email. Please try again later.",
         });
       }
-      const userExist = await verifyUsersSchema.findOne({email});
+      
       if(userExist){
-            userExist.otp = otp
-            await userExist.save()
+        // Update existing verification record
+        userExist.otp = otp;
+        userExist.username = username; // Update username if changed
+        await userExist.save();
 
-            return res.status(200).json({
-                success: true,
-                message: "new otp is been send to the email.",
-            });
-
+        return res.status(200).json({
+            success: true,
+            message: "Verification code sent to your email.",
+        });
       }
-      // Save user details in the verification schema
+      
+      // Create new verification record
       const user = new verifyUsersSchema({
         email,
         username,
@@ -79,18 +95,17 @@ exports.userRegisterController = async (req, res) => {
       });
   
       await user.save();
-      console.log("User created for verification:", user);
   
-      return res.status(200).json({
+      return res.status(201).json({
         success: true,
-        message: "User registered successfully. OTP sent to email.",
+        message: "Registration initiated. Please verify your email with the code sent.",
       });
   
     } catch (error) {
       console.error("Error in user registration:", error);
       return res.status(500).json({
         success: false,
-        message: "Internal server error.",
+        message: "Server error. Please try again later.",
       });
     }
   };
@@ -211,13 +226,29 @@ exports.verifyUserController = async (req, res) => {
   
 exports.verifyLoginController = async (req, res) => {
     try {
-      const { email, otp  } = req.body;
-      console.log(email,otp);
+      const { email, otp } = req.body;
 
-      if (!email || !otp ) {
+      // Validate required fields
+      if (!email) {
         return res.status(400).json({
           success: false,
-          message: "Email and OTP are required.",
+          message: "Email is required",
+        });
+      }
+
+      if (!otp) {
+        return res.status(400).json({
+          success: false,
+          message: "Verification code is required",
+        });
+      }
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid email format",
         });
       }
   
@@ -226,31 +257,43 @@ exports.verifyLoginController = async (req, res) => {
       if (!userExist) {
         return res.status(404).json({
           success: false,
-          message: "User not found.",
+          message: "Account not found. Please register first.",
         });
       }
 
+      // Check if OTP exists for user
+      if (!userExist.otp) {
+        return res.status(400).json({
+          success: false,
+          message: "No verification code requested. Please request a new code.",
+        });
+      }
   
       // Verify OTP
       const storedOtp = userExist.otp;
       if (storedOtp !== otp) {
         return res.status(401).json({
           success: false,
-          message: "Invalid OTP.",
+          message: "Invalid verification code. Please try again.",
         });
       }
-      console.log("cw")
-      // Save user to UserSchema and delete from verifyUsersSchema
+      
+      // Clear the OTP after successful verification
+      userExist.otp = undefined;
+      await userExist.save();
   
       return res.status(200).json({
-        id:userExist._id
+        success: true,
+        message: "Login successful",
+        id: userExist._id,
+        username: userExist.username
       });
   
     } catch (error) {
-      console.error("Error verifying user:", error);
+      console.error("Error verifying login:", error);
       return res.status(500).json({
         success: false,
-        message: "Internal server error.",
+        message: "Server error. Please try again later.",
       });
     }
 };
